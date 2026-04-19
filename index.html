@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Indigo League</title>
+    <meta name="description" content="A custom Netflix-like streaming platform for Pokémon Indigo League.">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts for typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Netflix-like Nav -->
+        <nav class="navbar">
+            <div class="logo">
+                PokéStream<span class="dot">.</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="active">Home</a>
+                <a href="#">Series</a>
+                <a href="#">My List</a>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="hero" id="hero-section">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <p class="season-badge">SEASON 1</p>
+                <h1>Indigo League</h1>
+                <p class="hero-description">
+                    Follow Ash Ketchum, a boy from Pallet Town, and his Pikachu on a journey to become a Pokémon Master. 
+                    Together with friends Brock and Misty, they travel the Kanto region, catching Pokémon and battling gym leaders!
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" id="play-random-btn">
+                        <svg viewBox="0 0 24 24" fill="currentColor" class="play-icon"><path d="M8 5v14l11-7z"/></svg>
+                        Play
+                    </button>
+                    <button class="btn btn-secondary">More Info</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="content-section">
+            <div class="catalog-header">
+                <h2>Episodes</h2>
+                <div class="filter-controls">
+                    <input type="text" id="search-input" placeholder="Search episode...">
+                </div>
+            </div>
+            <div class="episode-grid" id="episode-grid">
+                <!-- Episodes injected by app.js -->
+            </div>
+        </main>
+
+        <!-- Custom Video Player Modal -->
+        <div class="player-modal" id="player-modal">
+            <div class="player-close" id="player-close">&times;</div>
+            <div class="player-container">
+                <video id="custom-video" controls autoplay playsinline preload="metadata">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="now-playing-info">
+                    <h3 id="playing-title">Episode Title</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load App Logic -->
+    <script src="app.js"></script>
+</body>
+</html>

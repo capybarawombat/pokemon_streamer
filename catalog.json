@@ -1,0 +1,14 @@
+[
+  {
+    "id": "1A2B3C4D5E6F7G8H9I0J",
+    "episode": 1,
+    "title": "Pokémon - I Choose You!",
+    "thumbnail": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
+  },
+  {
+    "id": "A1B2C3D4E5F6G7H8I9J0",
+    "episode": 2,
+    "title": "Pokémon Emergency!",
+    "thumbnail": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10.png"
+  }
+]

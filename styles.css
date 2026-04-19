@@ -1,0 +1,337 @@
+:root {
+    --bg-color: #0b0c10;
+    --card-bg: #1f2833;
+    --text-main: #ffffff;
+    --text-muted: #c5c6c7;
+    --accent: #ffcc00; /* Pokemon Yellow */
+    --accent-hover: #e6b800;
+    --primary: #e3350d; /* Pokemon Red */
+    --primary-hover: #cc2f0b;
+    --glass-bg: rgba(31, 40, 51, 0.7);
+    --border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Outfit', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    overflow-x: hidden;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background: linear-gradient(to bottom, rgba(11, 12, 16, 0.9) 0%, transparent 100%);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: background 0.3s;
+}
+
+.navbar.scrolled {
+    background: var(--bg-color);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.logo .dot {
+    color: var(--primary);
+}
+
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-left: 30px;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: var(--text-main);
+}
+
+.hero {
+    height: 80vh;
+    background-image: url('https://w.wallhaven.cc/full/2e/wallhaven-2exk8y.jpg'); /* Placeholder gorgeous pokemon art */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 50px;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(11, 12, 16, 1) 0%, rgba(11, 12, 16, 0.4) 50%, transparent 100%),
+                linear-gradient(to top, var(--bg-color) 0%, transparent 20%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+.season-badge {
+    color: var(--accent);
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.hero h1 {
+    font-size: 4rem;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.hero-description {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.btn {
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s, background 0.3s;
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+.btn-primary {
+    background-color: var(--text-main);
+    color: #000;
+}
+
+.btn-primary:hover {
+    background-color: #ddd;
+}
+
+.btn-secondary {
+    background-color: var(--glass-bg);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.play-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.content-section {
+    padding: 40px 50px;
+    position: relative;
+    z-index: 5;
+    margin-top: -100px;
+}
+
+.catalog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-controls input {
+    background-color: var(--glass-bg);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 10px 15px;
+    border-radius: 6px;
+    outline: none;
+    font-family: 'Outfit';
+}
+
+.filter-controls input:focus {
+    border-color: var(--accent);
+}
+
+.episode-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.episode-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid transparent;
+}
+
+.episode-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    border-color: var(--border);
+}
+
+.episode-card .thumbnail {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background-color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.episode-card .thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.7;
+    transition: opacity 0.3s, transform 0.5s;
+}
+
+.episode-card:hover .thumbnail img {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.episode-card .play-overlay {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid var(--text-main);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.episode-card:hover .play-overlay {
+    opacity: 1;
+}
+
+.episode-info {
+    padding: 15px;
+}
+
+.ep-number {
+    font-size: 0.85rem;
+    color: var(--primary);
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.ep-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Player Modal */
+.player-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 9999;
+    display: none; /* hidden by default */
+    flex-direction: column;
+    justify-content: center;
+}
+
+.player-close {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+    z-index: 10000;
+    transition: transform 0.2s;
+}
+
+.player-close:hover {
+    transform: scale(1.2);
+}
+
+.player-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+video {
+    width: 100%;
+    border-radius: 12px;
+    background: #000;
+    box-shadow: 0 0 50px rgba(0,0,0,1);
+}
+
+.now-playing-info {
+    margin-top: 20px;
+    padding: 0 20px;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar { padding: 15px 20px; }
+    .hero { padding: 0 20px; }
+    .hero h1 { font-size: 2.5rem; }
+    .content-section { padding: 20px 20px; }
+}
