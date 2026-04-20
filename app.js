@@ -34,9 +34,34 @@ async function loadCatalog() {
             throw new Error('Configure API Key and Folder ID first.');
         }
 
+        // 1. Check for Cached Data (Save API Quota)
+        const CACHE_KEY = 'pokestream_catalog_cache';
+        const CACHE_TIME_KEY = 'pokestream_catalog_timestamp';
+        const ONE_HOUR = 60 * 60 * 1000;
+
+        const cachedData = localStorage.getItem(CACHE_KEY);
+        const cachedTime = localStorage.getItem(CACHE_TIME_KEY);
+        const now = Date.now();
+
+        if (cachedData && cachedTime && (now - cachedTime < ONE_HOUR)) {
+            console.log("Loading episodes from local cache...");
+            episodes = JSON.parse(cachedData);
+            renderGrid(episodes);
+            return;
+        }
+
+        // 2. Fetch from Google Drive API if no cache or expired
+        console.log("Fetching fresh catalog from Google Drive...");
         const url = `https://www.googleapis.com/drive/v3/files?q='${config.GOOGLE_DRIVE_FOLDER_ID}'+in+parents&fields=files(id,name,thumbnailLink)&orderBy=name&pageSize=100&key=${config.GOOGLE_DRIVE_API_KEY}`;
         const res = await fetch(url);
-        if (!res.ok) throw new Error('Failed to load catalog from Google Drive API');
+        
+        if (!res.ok) {
+            const errorData = await res.json();
+            if (res.status === 403 || res.status === 429) {
+                throw new Error('API Quota Exceeded. Google is limiting requests right now. Try again in a few minutes.');
+            }
+            throw new Error(errorData.error ? errorData.error.message : 'Failed to load from Google Drive API');
+        }
         
         const data = await res.json();
         
@@ -47,40 +72,48 @@ async function loadCatalog() {
 
         // Map live Google Drive data to our UI
         episodes = data.files.map((file, index) => {
-            // Clean up the filename for a clean title!
             let cleanTitle = file.name.replace('.mp4', '').replace(/\[.*?\]\s*/g, '').replace('Pokémon - ', '').trim();
-            
-            // Try to extract episode number, otherwise fallback to list position
             const numMatch = cleanTitle.match(/^(\d+)\s*-?\s*(.*)$/);
             const epNum = numMatch ? parseInt(numMatch[1], 10) : (index + 1);
-            if (numMatch) cleanTitle = numMatch[2].trim() || cleanTitle; // strip the number out
+            if (numMatch) cleanTitle = numMatch[2].trim() || cleanTitle;
 
             return {
                 id: file.id,
                 title: cleanTitle,
                 episode: epNum,
-                thumbnail: file.thumbnailLink // Magical free Google Drive thumbnails!
+                thumbnail: file.thumbnailLink
             };
         });
 
-        // Ensure sorted by episode number
         episodes.sort((a,b) => a.episode - b.episode);
+
+        // 3. Save to Cache
+        localStorage.setItem(CACHE_KEY, JSON.stringify(episodes));
+        localStorage.setItem(CACHE_TIME_KEY, now.toString());
+
         renderGrid(episodes);
     } catch (err) {
         console.error("Error loading automatically from Drive:", err);
-        // Provide mock data if not configured yet
-        episodes = [
-            { id: "mock1", title: "Pokémon - I Choose You!", episode: 1 },
-            { id: "mock2", title: "Pokémon Emergency!", episode: 2 },
-            { id: "mock3", title: "Ash Catches a Pokémon", episode: 3 }
-        ];
-        renderGrid(episodes);
         
-        // Show warning
+        // Show the error on screen to the user
         const warning = document.createElement('div');
-        warning.style = "background: rgba(255,0,0,0.2); padding: 10px; margin-bottom: 20px; border-radius: 8px; border: 1px solid red;";
-        warning.innerHTML = "<strong>Notice:</strong> Automatic Fetch failed. Did you paste your Folder ID and API Key into <code>app.js</code>? Showing UI examples only.";
+        warning.className = 'api-warning';
+        warning.style = "background: rgba(233, 53, 13, 0.2); padding: 20px; margin-bottom: 30px; border-radius: 12px; border: 1px solid var(--primary); text-align: center;";
+        warning.innerHTML = `
+            <h3 style="color: var(--primary); margin-bottom: 10px;">Connection Error</h3>
+            <p>${err.message}</p>
+            <button onclick="localStorage.clear(); location.reload();" style="margin-top: 15px; padding: 8px 16px; cursor: pointer; background: var(--primary); color: white; border: none; border-radius: 4px;">Retry Connection</button>
+        `;
         document.querySelector('.content-section').prepend(warning);
+
+        // Show sample data if fetch failed
+        if (episodes.length === 0) {
+           episodes = [
+                { id: "mock1", title: "Connection Failed - Showing Example", episode: 1 },
+                { id: "mock2", title: "Check your API Console quotas", episode: 2 }
+            ];
+            renderGrid(episodes);
+        }
     }
 }
 
